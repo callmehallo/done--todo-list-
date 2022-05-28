@@ -1,24 +1,35 @@
 import './App.css'
-import { React, useState } from 'react'
+import React from 'react'
 import {
   AppBar,
   Section,
   useSections,
-  AddSectionModal,
+  SectionNameModal,
+  useModal,
+  ACTIONS,
 } from './components/index'
 
 const App = () => {
-  const { sections } = useSections()
-  const [modalHidden, setModalHidden] = useState(true)
+  const { sections, dispatch } = useSections()
+  const [modalHidden, handleModal] = useModal()
 
-  const handleModal = () => {
-    setModalHidden(hidden => !hidden)
+  const addSection = formData => {
+    const { section } = formData
+    const capitalSection = section.charAt(0).toUpperCase() + section.slice(1)
+    dispatch({
+      type: ACTIONS.ADD_SECTION,
+      payload: { section: capitalSection },
+    })
+    handleModal()
   }
 
   return (
     <div className='App'>
-      {!modalHidden && <AddSectionModal handleModal={handleModal} />}
-      <AppBar onClick={handleModal} />
+      {!modalHidden && (
+        <SectionNameModal handleModal={handleModal} onSubmit={addSection} />
+      )}
+      <AppBar handleModal={handleModal} />
+
       {sections.map(items => (
         <Section items={items} key={items.key} />
       ))}

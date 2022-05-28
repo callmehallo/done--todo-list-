@@ -71,7 +71,7 @@ const deleteTask = produce((state, action) => {
 })
 
 const addSection = produce((state, action) => {
-  state.push(section(action.payload.data))
+  state.push(section(action.payload))
 })
 
 const deleteSection = produce((state, action) => {
@@ -83,7 +83,9 @@ const deleteSection = produce((state, action) => {
 
 const editSection = (state, action) =>
   state.map(section =>
-    section.key === action.payload.key ? action.payload.section : section
+    section.key === action.payload.key
+      ? { ...section, section: action.payload.section }
+      : section
   )
 
 const reducer = (state, action) => {

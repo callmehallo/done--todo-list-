@@ -36,7 +36,12 @@ const SectionProvider = ({ children }) => {
 
   return (
     <SectionContext.Provider
-      value={{ sections, dispatch, selectTask, handleSelectTask }}
+      value={{
+        sections,
+        dispatch,
+        selectTask,
+        handleSelectTask,
+      }}
     >
       {children}
     </SectionContext.Provider>

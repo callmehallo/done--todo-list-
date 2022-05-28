@@ -8,16 +8,33 @@ import {
   useSections,
   ACTIONS,
 } from './index'
+import SectionNameModal from './SectionNameModal'
+import useModal from './utils/customHooks'
 
 const TaskDefaultView = ({
-  data: { title, description, date },
+  data: { title, description, date, sectionKey, key, done },
   onClick,
   isTaskOpen,
 }) => {
+  const { dispatch } = useSections()
+
+  const checkTask = () => {
+    const toggleDone = !done
+
+    const data = { done: toggleDone, key, sectionKey }
+    console.log(data)
+    dispatch({ type: ACTIONS.EDIT_TASK, payload: { data, key, sectionKey } })
+  }
+
   return (
     <div className='flex w-full gap-2'>
       <div className='flex items-baseline'>
-        <input className='m-0 h-10 w-6' type='checkbox' />
+        <input
+          className='m-0 h-10 w-6 accent-red-500 checked:ease-in-out	'
+          type='checkbox'
+          onChange={checkTask}
+          checked={done}
+        />
       </div>
       <div
         className='w-full hover:cursor-pointer flex flex-col'
@@ -120,7 +137,7 @@ const DropdownItem = ({ icon, label, size, onClick, isDisabled = '' }) => {
 
 const SectionHeader = ({ sectionKey, name, onClick, isCollapsed }) => {
   const { dispatch, handleSelectTask } = useSections()
-
+  const [modalHidden, handleModal] = useModal()
   const addTask = () => {
     dispatch({ type: ACTIONS.ADD_TASK, payload: { sectionKey } })
   }
@@ -129,13 +146,25 @@ const SectionHeader = ({ sectionKey, name, onClick, isCollapsed }) => {
     dispatch({ type: ACTIONS.DELETE_SECTION, payload: { sectionKey } })
   }
 
-  const renameSection = () => {}
+  const renameSection = formData => {
+    const { section } = formData
+    const capitalSection = section.charAt(0).toUpperCase() + section.slice(1)
+    dispatch({
+      type: ACTIONS.EDIT_SECTION,
+      payload: { section: capitalSection, key: sectionKey },
+    })
+    handleModal()
+  }
 
   return (
     <div
       className={`flex text-cusBlack font-semibold  p-1 pl-4 pr-4   
       `}
     >
+      {' '}
+      {!modalHidden && (
+        <SectionNameModal handleModal={handleModal} onSubmit={renameSection} />
+      )}
       <div className='flex justify-between w-full'>
         <div className='text-md'>{name}</div>
         {/* ANZAHL AN TASKS IN DER JEWEILIGEN SECTION */}
@@ -171,7 +200,7 @@ const SectionHeader = ({ sectionKey, name, onClick, isCollapsed }) => {
               isDisabled={name}
               icon='fa-pen-to-square'
               label='rename Project'
-              onClick='renameSection'
+              onClick={handleModal}
             />
           </DropdownMenu>
         </DropdownIcon>
@@ -189,8 +218,12 @@ const Section = ({ items: { section, tasks, key } }) => {
 
   return (
     <div
-      className={`font-quicksand mb-2 ${
-        collapsed || tasks.length === 0 ? 'border-b-2' : ''
+      className={`font-quicksand mb-3 ${
+        collapsed ||
+        tasks.length === 0 ||
+        tasks.every(task => task.done === true)
+          ? 'border-b-2'
+          : ''
       }`}
     >
       <SectionHeader
@@ -201,12 +234,18 @@ const Section = ({ items: { section, tasks, key } }) => {
       />
       <ul>
         {!collapsed &&
-          tasks.map(items => (
-            <li key={items.key}>
-              {' '}
-              <Task items={items} sectionKey={key} isCollapsed={collapsed} />
-            </li>
-          ))}
+          tasks.map(
+            items =>
+              !items.done && (
+                <li key={items.key}>
+                  <Task
+                    items={items}
+                    sectionKey={key}
+                    isCollapsed={collapsed}
+                  />
+                </li>
+              )
+          )}
       </ul>
     </div>
   )

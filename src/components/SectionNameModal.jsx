@@ -1,42 +1,36 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { useSections } from './SectionsContext'
-import { ACTIONS, FontAwesomeIcon } from './index'
+import { FontAwesomeIcon } from './index'
 
-const AddSectionModal = ({ handleModal }) => {
+const AddSectionModal = ({ onSubmit, handleModal }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm()
 
-  const { dispatch } = useSections()
-
-  const onSubmit = formData => {
-    const data = { ...formData }
-    dispatch({ type: ACTIONS.ADD_SECTION, payload: { data } })
-    handleModal()
-  }
-
   return (
-    <div className=' fixed w-screen h-screen  z-20 bg-cusBlack bg-opacity-10'>
+    <div className=' fixed w-screen h-screen  top-0 left-0 right-0 bottom-0 bg-cusBlack bg-opacity-10 z-40'>
       <div
         className='relative
-      mt-0 mb-0 ml-auto  top-2/4 mr-auto  z-30   w-fit  p-1 '
+      mt-0 mb-0 ml-auto  top-2/4 mr-auto  z-50   w-fit  p-1 '
       >
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className={'flex flex-col items-center font-quicksand'}
+          className={
+            'flex flex-col items-center font-quicksand bg-opacity-100 z-50'
+          }
         >
           {errors.section?.type === 'required' && (
-            <span className='  text-red-500  font-semibold flex w-fit mb-2'>
+            <span className='  text-red-500  font-bold flex w-fit mb-2'>
               a name for your project is required
             </span>
           )}
           <input
             placeholder='name your project'
             size={25}
-            className='outline-none rounded-lg p-2 text-center text-xl font-semibold'
+            className='outline-none rounded-lg p-2 text-center text-xl font-semibold 
+            bg-opacity-100 opacity-100'
             name='section'
             defaultValue={''}
             autoFocus

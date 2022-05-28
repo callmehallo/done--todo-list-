@@ -19,9 +19,9 @@ const DropdownItem = ({ icon, label, size, onClick }) => {
   )
 }
 
-const AppBar = ({ onClick }) => {
+const AppBar = ({ handleModal }) => {
   return (
-    <div className='flex marker:content-none font-quicksand items-center justify-between w-full box-border bg-cusBlack h-20 p-4 font-bold'>
+    <div className='flex marker:content-none font-quicksand items-center justify-between w-full box-border bg-cusBlack h-20 p-4 font-bold '>
       <h2 className='flex  text-4xl text-cusGrey italic'>DONE.</h2>
       <DropdownIcon
         icon='fa-bars'
@@ -33,7 +33,7 @@ const AppBar = ({ onClick }) => {
           <DropdownItem
             icon='fa-folder-plus'
             label={'Create Project'}
-            onClick={onClick}
+            onClick={handleModal}
           />
         </DropdownMenu>
       </DropdownIcon>

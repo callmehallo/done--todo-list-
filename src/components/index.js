@@ -6,7 +6,8 @@ import AppBar from './AppBar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { SectionProvider, useSections } from './SectionsContext'
 import { section, reducer, getInitialValue, ACTIONS } from './utils/reducer'
-import AddSectionModal from './AddSectionModal'
+import SectionNameModal from './SectionNameModal'
+import useModal from './utils/customHooks'
 
 export {
   DropdownIcon,
@@ -19,7 +20,8 @@ export {
   useSections,
   ACTIONS,
   section,
-  AddSectionModal,
+  SectionNameModal,
   reducer,
   getInitialValue,
+  useModal,
 }
