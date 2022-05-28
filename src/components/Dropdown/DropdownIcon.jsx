@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useRef, useState } from 'react'
 
-const DropdownIcon = ({ children, icon, className }) => {
+const DropdownIcon = ({ children, icon, className, size }) => {
   const [clicked, setClicked] = useState(false)
   const handleClick = () => {
     setClicked(clicked => !clicked)
@@ -29,7 +29,7 @@ const DropdownIcon = ({ children, icon, className }) => {
 
   return (
     <div ref={node} onClick={handleClick}>
-      <FontAwesomeIcon className={className} icon={icon} />
+      <FontAwesomeIcon className={className} icon={icon} size={size} />
 
       {clicked && children}
     </div>

@@ -14,6 +14,10 @@ import {
   faAngleDown,
   faBars,
   faCalendarDay,
+  faCircleCheck,
+  faCircleXmark,
+  faFolderMinus,
+  faPenToSquare,
 } from '@fortawesome/free-solid-svg-icons'
 import { SectionProvider } from './components'
 
@@ -26,7 +30,11 @@ library.add(
   faFlag,
   faAngleDown,
   faBars,
-  faCalendarDay
+  faCalendarDay,
+  faCircleCheck,
+  faCircleXmark,
+  faFolderMinus,
+  faPenToSquare
 )
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(

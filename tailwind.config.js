@@ -8,11 +8,17 @@ module.exports = {
     extend: {
       animation: {
         'scale-in-top':
-          'scale-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940)   both',
+          'scale-in-top 0.4s cubic-bezier(0.250, 0.460, 0.450, 0.940)   both',
         'scale-in-tl':
           'scale-in-tl 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940)   both',
         'scale-in-tr':
           'scale-in-tr 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940)   both',
+        'rotate-90-cw':
+          'rotate-90-cw 0.4s cubic-bezier(0.250, 0.460, 0.450, 0.940)   both',
+        'rotate-90-cw-r':
+          'rotate-90-cw-r 0.4s cubic-bezier(0.250, 0.460, 0.450, 0.940) reverse both',
+        'slide-in-top':
+          'slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940)   both',
       },
       keyframes: {
         'scale-in-top': {
@@ -51,6 +57,32 @@ module.exports = {
             opacity: '1',
           },
         },
+        'rotate-90-cw': {
+          '0%': {
+            transform: 'rotate(0)',
+          },
+          to: {
+            transform: 'rotate(90deg)',
+          },
+        },
+        'rotate-90-cw-r': {
+          '0%': {
+            transform: 'rotate(0)',
+          },
+          to: {
+            transform: 'rotate(90deg)',
+          },
+        },
+        'slide-in-top': {
+          '0%': {
+            transform: 'translateY(-1000px)',
+            opacity: '0',
+          },
+          to: {
+            transform: 'translateY(0)',
+            opacity: '1',
+          },
+        },
       },
       colors: {
         cusBlack: '#212121',
@@ -65,7 +97,14 @@ module.exports = {
   },
   plugins: [
     tailwindCSSAnimista({
-      classes: ['scale-in-top', 'scale-in-tl', 'scale-in-tr'],
+      classes: [
+        'scale-in-top',
+        'scale-in-tl',
+        'scale-in-tr',
+        'rotate-90-cw',
+        'rotate-90-cw-r',
+        'slide-in-top',
+      ],
       settings: {},
       variants: ['responsive'],
     }),

@@ -4,7 +4,9 @@ import Form from './Form'
 import Section from './Section'
 import AppBar from './AppBar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { SectionProvider, useSections, ACTIONS } from './SectionContext'
+import { SectionProvider, useSections } from './SectionsContext'
+import { section, reducer, getInitialValue, ACTIONS } from './utils/reducer'
+import AddSectionModal from './AddSectionModal'
 
 export {
   DropdownIcon,
@@ -16,4 +18,8 @@ export {
   SectionProvider,
   useSections,
   ACTIONS,
+  section,
+  AddSectionModal,
+  reducer,
+  getInitialValue,
 }

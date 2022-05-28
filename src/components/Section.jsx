@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { format, isAfter } from 'date-fns'
 import {
   Form,
@@ -9,22 +9,31 @@ import {
   ACTIONS,
 } from './index'
 
-const TaskDefaultView = ({ data: { title, description, date } }) => {
-  const { handleTaskClicked } = useSections()
+const TaskDefaultView = ({
+  data: { title, description, date },
+  onClick,
+  isTaskOpen,
+}) => {
   return (
     <div className='flex w-full gap-2'>
       <div className='flex items-baseline'>
-        <input className='m-0 h-10 w-6 ' type='checkbox' />
+        <input className='m-0 h-10 w-6' type='checkbox' />
       </div>
       <div
         className='w-full hover:cursor-pointer flex flex-col'
-        onClick={handleTaskClicked}
+        onClick={onClick}
       >
-        <div className=' flex font-semibold text-lg pt-1'>{title}</div>
-        <div className='flex text-gray-500'>{description}</div>
+        <div className=' flex font-semibold text-lg pt-1 '>{title}</div>
+        <div
+          className={`flex text-gray-500 overflow-hidden break-words ${
+            !date && !isTaskOpen ? 'border-b-2' : ''
+          }`}
+        >
+          {description}
+        </div>
         {date && (
           <div
-            className={`flex gap-1 text-sm ${
+            className={`flex ${!isTaskOpen ? 'border-b-2' : ''} gap-1 text-sm ${
               isAfter(new Date(), date) ? 'text-red-600' : 'text-black'
             }`}
           >
@@ -38,29 +47,64 @@ const TaskDefaultView = ({ data: { title, description, date } }) => {
 }
 
 const Task = ({ items, sectionKey }) => {
-  const { isTaskClicked, handleTaskClicked } = useSections()
+  const { title, date, key } = items
+  const [isTaskOpen, setTaskOpen] = useState(true)
+  const { selectTask } = useSections()
+
+  useEffect(() => {
+    title === ''
+      ? setTaskOpen(prev => (prev = true))
+      : setTaskOpen(prev => (prev = false))
+  }, [title, date])
+
+  const onClick = () => setTaskOpen(prev => !prev)
 
   return (
-    <div className='w-full pl-4 pr-4 pt-2 pb-2 border-collapse box-border flex flex-col'>
-      <TaskDefaultView data={items} onClick={handleTaskClicked} />
-      {isTaskClicked && <Form data={items} sectionKey={sectionKey} />}
+    <div className='w-full pl-4 pr-4 pt-2 pb-2 border-collapse box-border flex flex-col  border-cusGrey relative'>
+      <div
+        id={key}
+        sectionkey={sectionKey}
+        className={`${
+          selectTask
+            ? 'absolute hover:bg-cusBlack hover:bg-opacity-10 z-20 w-screen -ml-4 h-full'
+            : 'hidden'
+        }`}
+      />
+      <TaskDefaultView data={items} onClick={onClick} isTaskOpen={isTaskOpen} />
+      {isTaskOpen && <Form data={items} sectionKey={sectionKey} />}
     </div>
   )
 }
 
-const CollapseIcon = ({ onClick }) => {
+const CollapseIcon = ({ onClick, isCollapsed, size }) => {
   return (
-    <div onClick={onClick}>
-      <FontAwesomeIcon icon='fa-angle-down' />
+    <div onClick={onClick} className='hover:cursor-pointer hover:text-gray-500'>
+      <FontAwesomeIcon
+        icon='fa-angle-down'
+        size={size}
+        className={`${
+          isCollapsed
+            ? 'animate-rotate-90-cw'
+            : ' rotate-90 animate-rotate-90-cw-r '
+        }`}
+      />
     </div>
   )
 }
 
-const DropdownItem = ({ icon, label, size, onClick }) => {
+const DropdownItem = ({ icon, label, size, onClick, isDisabled = '' }) => {
+  const disabled = isDisabled === 'General'
   return (
     <div>
       <button
-        className='flex w-full justify-start hover:bg-gray-400 rounded-md p-1 hover:cursor-pointer justify-items-center active:bg-slate-600'
+        className={`flex w-full justify-start  rounded-md p-1  justify-items-center 
+        ${
+          !disabled
+            ? ' hover:cursor-pointer hover:bg-gray-400 active:bg-slate-600'
+            : ' opacity-30 hover: cursor-not-allowed'
+        }
+        `}
+        disabled={disabled}
         onClick={onClick}
       >
         <FontAwesomeIcon
@@ -74,35 +118,61 @@ const DropdownItem = ({ icon, label, size, onClick }) => {
   )
 }
 
-const SectionHeader = ({ sectionKey, name = 'General', onClick }) => {
-  const { dispatch, handleTaskClicked, isTaskClicked } = useSections()
+const SectionHeader = ({ sectionKey, name, onClick, isCollapsed }) => {
+  const { dispatch, handleSelectTask } = useSections()
 
   const addTask = () => {
     dispatch({ type: ACTIONS.ADD_TASK, payload: { sectionKey } })
-    if (!isTaskClicked) handleTaskClicked()
   }
 
+  const deleteSection = () => {
+    dispatch({ type: ACTIONS.DELETE_SECTION, payload: { sectionKey } })
+  }
+
+  const renameSection = () => {}
+
   return (
-    <div className='flex text-cusBlack p-1 pl-4 pr-4'>
+    <div
+      className={`flex text-cusBlack font-semibold  p-1 pl-4 pr-4   
+      `}
+    >
       <div className='flex justify-between w-full'>
-        <div>{name}</div>
+        <div className='text-md'>{name}</div>
         {/* ANZAHL AN TASKS IN DER JEWEILIGEN SECTION */}
       </div>
       <div className='flex gap-6'>
-        <CollapseIcon onClick={onClick}>
+        <CollapseIcon onClick={onClick} isCollapsed={isCollapsed} size='lg'>
           <Task />
         </CollapseIcon>
         <DropdownIcon
-          className={'flex hover:cursor-pointer'}
+          className={'flex hover:cursor-pointer hover:text-gray-500'}
           icon='fa-ellipsis-vertical'
+          size='lg'
         >
           <DropdownMenu
             className={
-              'flex flex-col  animate-scale-in-tr mt-1 border-collapse m1 rounded-md bg-cusGrey absolute right-0  font-quicksand text-2xl p-1'
+              'flex flex-col  animate-scale-in-tr mt-1 border-collapse m1 rounded-md bg-cusGrey  z-10 absolute right-0  font-quicksand text-2xl p-1'
             }
           >
             <DropdownItem icon='fa-plus' label='Add Task' onClick={addTask} />
-            <DropdownItem icon='fa-trash-can' label='Delete Task' />
+            <DropdownItem
+              icon='fa-trash-can'
+              label='Delete Task'
+              onClick={handleSelectTask}
+            />
+
+            <DropdownItem
+              isDisabled={name}
+              icon='fa-folder-minus'
+              label='Delete Project'
+              onClick={deleteSection}
+            />
+            <DropdownItem
+              isDisabled={name}
+              icon='fa-pen-to-square'
+              label='rename Project'
+              onClick='renameSection'
+            />
           </DropdownMenu>
         </DropdownIcon>
       </div>
@@ -118,14 +188,23 @@ const Section = ({ items: { section, tasks, key } }) => {
   }
 
   return (
-    <div className='font-quicksand'>
-      <SectionHeader name={section} sectionKey={key} onClick={handleCollapse} />
+    <div
+      className={`font-quicksand mb-2 ${
+        collapsed || tasks.length === 0 ? 'border-b-2' : ''
+      }`}
+    >
+      <SectionHeader
+        name={section}
+        sectionKey={key}
+        onClick={handleCollapse}
+        isCollapsed={collapsed}
+      />
       <ul>
         {!collapsed &&
           tasks.map(items => (
             <li key={items.key}>
               {' '}
-              <Task items={items} sectionKey={key} />
+              <Task items={items} sectionKey={key} isCollapsed={collapsed} />
             </li>
           ))}
       </ul>

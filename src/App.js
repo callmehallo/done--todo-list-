@@ -1,13 +1,24 @@
 import './App.css'
-import { React } from 'react'
-import { AppBar, Section, useSections } from './components/index'
+import { React, useState } from 'react'
+import {
+  AppBar,
+  Section,
+  useSections,
+  AddSectionModal,
+} from './components/index'
 
 const App = () => {
   const { sections } = useSections()
+  const [modalHidden, setModalHidden] = useState(true)
+
+  const handleModal = () => {
+    setModalHidden(hidden => !hidden)
+  }
 
   return (
     <div className='App'>
-      <AppBar />
+      {!modalHidden && <AddSectionModal handleModal={handleModal} />}
+      <AppBar onClick={handleModal} />
       {sections.map(items => (
         <Section items={items} key={items.key} />
       ))}
@@ -16,15 +27,3 @@ const App = () => {
 }
 
 export default App
-
-{
-  /* 
- <div className='App'>
-      <Navbar isTask={false} />
-      <TaskContainer />
-       <AppBar /> 
-      {sections.map(items => (
-        <Section items={items} />
-      ))}
-    </div> */
-}
