@@ -1,8 +1,8 @@
-import { addDays, format, isToday, isWithinInterval, formatISO } from 'date-fns'
 import { useState } from 'react'
-import { Calendar } from 'react-calendar'
-import { Controller, useForm } from 'react-hook-form'
 import { FontAwesomeIcon, useSections, ACTIONS } from './index'
+import { format, formatISO, isSameYear } from 'date-fns'
+import { Controller, useForm } from 'react-hook-form'
+import { Calendar } from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
 
 const Form = ({
@@ -10,7 +10,7 @@ const Form = ({
   sectionKey,
 }) => {
   const { dispatch } = useSections()
-  const [value, setValue] = useState(date ? date : new Date())
+  const [value, setValue] = useState(date ? date : null)
   const [btnClicked, setBtnClicked] = useState(false)
   const {
     register,
@@ -26,8 +26,7 @@ const Form = ({
 
   const onSubmit = () => {
     const data = { ...getValues(), ...{ flagged } }
-    const { title } = data
-    if (title === '') return
+
     dispatch({
       type: ACTIONS.EDIT_TASK,
       payload: {
@@ -36,12 +35,11 @@ const Form = ({
         key,
       },
     })
-    console.log(data)
   }
 
   const changeFlagged = () => {
     flagged = !flagged
-    console.log(flagged)
+    onSubmit()
   }
 
   return (
@@ -56,7 +54,7 @@ const Form = ({
           </span>
         )}
         <input
-          className='text-xl outline-none'
+          className={`text-xl outline-none  `}
           type='text'
           name='title'
           placeholder='e.g., Watering plants'
@@ -66,17 +64,17 @@ const Form = ({
         />
 
         <textarea
-          className='outline-none resize-none'
+          className={`outline-none resize-none  `}
           name='description'
           placeholder='Description'
           spellCheck={false}
           defaultValue={description}
           onKeyDown={e => {
-            //dynamic fieldsize:
             if (e.key === 'Enter' && e.shiftKey === false) {
               handleSubmit(onSubmit())
+              e.preventDefault()
             }
-
+            //dynamic fieldsize:
             e.target.style.height = 'inherit'
             e.target.style.height = `${e.target.scrollHeight}px`
           }}
@@ -91,19 +89,20 @@ const Form = ({
               />
 
               <p className=' flex ml-1'>
-                {isToday(value)
+                {!value
                   ? 'No Date'
-                  : isWithinInterval(value, {
-                      start: new Date(),
-                      end: addDays(new Date(), 7),
-                    })
-                  ? format(value, 'EEEE')
-                  : format(value, 'dd.MMM')}
+                  : isSameYear(new Date(), value)
+                  ? format(value, 'dd.MMM')
+                  : format(value, 'dd.MM.yy')}
               </p>
             </button>
           </div>
 
-          <button className='flex ml-3' type='button' onClick={changeFlagged}>
+          <button
+            className={`flex ml-3 ${flagged ? 'text-red-600' : ''} `}
+            type='button'
+            onClick={changeFlagged}
+          >
             <FontAwesomeIcon icon='fa-flag' />
           </button>
         </div>
@@ -117,6 +116,7 @@ const Form = ({
                 calendarType='ISO 8601'
                 selected={value}
                 name='date'
+                minDate={new Date()}
                 onChange={date => {
                   onChange(date)
                   handleBtnClicked()

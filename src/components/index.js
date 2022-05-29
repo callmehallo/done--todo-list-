@@ -8,6 +8,7 @@ import { SectionProvider, useSections } from './SectionsContext'
 import { section, reducer, getInitialValue, ACTIONS } from './utils/reducer'
 import SectionNameModal from './SectionNameModal'
 import useModal from './utils/customHooks'
+import DropdownItem from './Dropdown/DropdownItem'
 
 export {
   DropdownIcon,
@@ -24,4 +25,5 @@ export {
   reducer,
   getInitialValue,
   useModal,
+  DropdownItem,
 }

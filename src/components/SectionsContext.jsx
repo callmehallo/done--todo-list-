@@ -10,6 +10,12 @@ const SectionProvider = ({ children }) => {
 
   const [selectTask, setSelectTask] = useState(false)
 
+  const [showDoneTasks, setShowDoneTasks] = useState(false)
+
+  const handleShowDoneTasks = () => {
+    setShowDoneTasks(show => !show)
+  }
+
   const handleSelectTask = () => setSelectTask(selected => !selected)
 
   const deleteSelectedTask = e => {
@@ -41,6 +47,8 @@ const SectionProvider = ({ children }) => {
         dispatch,
         selectTask,
         handleSelectTask,
+        showDoneTasks,
+        handleShowDoneTasks,
       }}
     >
       {children}

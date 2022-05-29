@@ -1,25 +1,10 @@
 import React from 'react'
-import { DropdownMenu, DropdownIcon, FontAwesomeIcon } from './index'
-
-const DropdownItem = ({ icon, label, size, onClick }) => {
-  return (
-    <div>
-      <button
-        className='flex justify-start w-full hover:bg-gray-400 rounded-md p-1 hover:cursor-pointer justify-items-center active:bg-slate-600'
-        onClick={onClick}
-      >
-        <FontAwesomeIcon
-          className='max-w-[24px] mr-1'
-          icon={icon}
-          size={size}
-        />
-        <h3>{label}</h3>
-      </button>
-    </div>
-  )
-}
+import { DropdownMenu, DropdownIcon, DropdownItem } from './index'
+import { useSections } from './SectionsContext'
 
 const AppBar = ({ handleModal }) => {
+  const { handleSelectTask, handleShowDoneTasks, showDoneTasks } = useSections()
+
   return (
     <div className='flex marker:content-none font-quicksand items-center justify-between w-full box-border bg-cusBlack h-20 p-4 font-bold '>
       <h2 className='flex  text-4xl text-cusGrey italic'>DONE.</h2>
@@ -34,6 +19,17 @@ const AppBar = ({ handleModal }) => {
             icon='fa-folder-plus'
             label={'Create Project'}
             onClick={handleModal}
+          />
+          <DropdownItem
+            icon='fa-trash-can'
+            label='Delete Tasks'
+            onClick={handleSelectTask}
+          />
+          <DropdownItem
+            icon={showDoneTasks ? 'fa-eye-slash' : 'fa-eye'}
+            label={showDoneTasks ? 'Hide Tasks' : 'Show All Tasks'}
+            onClick={handleShowDoneTasks}
+            className='mt-2'
           />
         </DropdownMenu>
       </DropdownIcon>

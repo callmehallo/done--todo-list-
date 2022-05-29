@@ -18,6 +18,8 @@ import {
   faCircleXmark,
   faFolderMinus,
   faPenToSquare,
+  faEye,
+  faEyeSlash,
 } from '@fortawesome/free-solid-svg-icons'
 import { SectionProvider } from './components'
 
@@ -34,7 +36,9 @@ library.add(
   faCircleCheck,
   faCircleXmark,
   faFolderMinus,
-  faPenToSquare
+  faPenToSquare,
+  faEye,
+  faEyeSlash
 )
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
