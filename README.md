@@ -4,11 +4,10 @@
 
  <h2 style="text-align:center;">My first react web app</h2> 
 
-***
+
 
 <h2 style="text-align:center;"><a href='https://callmehallo.github.io/done--todo-list-/ '> Github Pages</a></h2>
 
-***
 
 <details> 
 <summary style="font-size: 2rem">Instructions to fill app with predefined tasks
@@ -54,7 +53,7 @@
    
 ### What I've learned: 
 
--how following hooks work: state, effect, reducer, context, custom hooks
+- how following hooks work: state, effect, reducer, context, custom hooks
 - how to implent stateful forms and connect them with proper logic 
 - how to implement controlled forms/components
 

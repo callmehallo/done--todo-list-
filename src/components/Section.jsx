@@ -122,11 +122,7 @@ const CollapseIcon = ({ onClick, isCollapsed, size }) => {
       <FontAwesomeIcon
         icon='fa-angle-down'
         size={size}
-        className={`${
-          isCollapsed
-            ? 'animate-rotate-90-cw'
-            : ' rotate-90 animate-rotate-90-cw-r '
-        }`}
+        className={`${isCollapsed ? 'rotate-90' : '  '}`}
       />
     </div>
   )
