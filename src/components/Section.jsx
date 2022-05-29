@@ -26,9 +26,7 @@ const TaskDefaultView = ({
   const { dispatch } = useSections()
 
   const checkTask = () => {
-    const toggleDone = !done
-
-    const data = { done: toggleDone, key, sectionKey }
+    const data = { done: !done, key, sectionKey }
 
     dispatch({ type: ACTIONS.EDIT_TASK, payload: { data, key, sectionKey } })
   }
@@ -150,32 +148,26 @@ const SectionHeader = ({ sectionKey, name, onClick, isCollapsed }) => {
     handleModal()
   }
 
-  const countedTasks = () =>
-    sections
-      .find(section => section.key === sectionKey)
-      .tasks.filter(task => task.done === false).length
+  const countedTasks = sections
+    .find(section => section.key === sectionKey)
+    .tasks.filter(task => task.done === false).length
 
   return (
     <div
       className={`flex text-cusBlack font-semibold  p-1 pl-4 pr-4   
       `}
     >
-      {' '}
       {!modalHidden && (
         <SectionNameModal handleModal={handleModal} onSubmit={renameSection} />
       )}
       <div className='flex justify-between w-full'>
         <div className='flex gap-2'>
           <h3 className=''>{name}</h3>
-          {countedTasks() > 0 && (
-            <p className='text-gray-500 '>{countedTasks()}</p>
-          )}
+          {countedTasks > 0 && <p className='text-gray-500 '>{countedTasks}</p>}
         </div>
       </div>
       <div className='flex gap-6'>
-        <CollapseIcon onClick={onClick} isCollapsed={isCollapsed} size='lg'>
-          <Task />
-        </CollapseIcon>
+        <CollapseIcon onClick={onClick} isCollapsed={isCollapsed} size='lg' />
         <DropdownIcon
           className={'flex hover:cursor-pointer hover:text-gray-500'}
           icon='fa-ellipsis-vertical'
@@ -187,7 +179,6 @@ const SectionHeader = ({ sectionKey, name, onClick, isCollapsed }) => {
             }
           >
             <DropdownItem icon='fa-plus' label='Add Task' onClick={addTask} />
-
             <DropdownItem
               isDisabled={name}
               icon='fa-folder-minus'
@@ -208,17 +199,17 @@ const SectionHeader = ({ sectionKey, name, onClick, isCollapsed }) => {
 }
 
 const Section = ({ items: { section, tasks, key } }) => {
+  const { showDoneTasks } = useSections()
   const [collapsed, setCollapsed] = useState(false)
 
   const handleCollapse = () => {
     setCollapsed(collapsed => !collapsed)
   }
 
-  const { showDoneTasks } = useSections()
   return (
     <div
       className={`font-quicksand mb-3 ${
-        collapsed ||
+        collapsed || //expo in utils
         tasks.length === 0 ||
         tasks.every(task => task.done === true)
           ? 'border-b-2'
