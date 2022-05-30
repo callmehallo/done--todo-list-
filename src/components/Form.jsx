@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { FontAwesomeIcon, useSections, ACTIONS } from './index'
-import { format, formatISO, isSameYear } from 'date-fns'
+import { useRef, useState } from 'react'
+import { FontAwesomeIcon, useSections } from './index'
+import { ACTIONS, formatFormDate } from '../utils'
 import { Controller, useForm } from 'react-hook-form'
 import { Calendar } from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
@@ -10,22 +10,30 @@ const Form = ({
   sectionKey,
 }) => {
   const { dispatch } = useSections()
-  const [value, setValue] = useState(date ? date : null)
   const [btnClicked, setBtnClicked] = useState(false)
   const {
     register,
     handleSubmit,
     control,
-    getValues,
     formState: { errors },
   } = useForm()
 
+  const formRef = useRef(null)
+
   const handleBtnClicked = () => {
-    setBtnClicked(prev => !prev)
+    setBtnClicked(clicked => !clicked)
   }
 
-  const onSubmit = () => {
-    const data = { ...getValues(), ...{ flagged } }
+  const triggerSubmit = () => {
+    if (formRef.current) {
+      formRef.current.dispatchEvent(
+        new Event('submit', { cancelable: true, bubbles: true })
+      )
+    }
+  }
+
+  const onSubmit = formData => {
+    const data = { ...formData }
 
     dispatch({
       type: ACTIONS.EDIT_TASK,
@@ -37,16 +45,12 @@ const Form = ({
     })
   }
 
-  const changeFlagged = () => {
-    flagged = !flagged
-    onSubmit()
-  }
-
   return (
     <div className='flex flex-col pl-8 pr-4 pt-2 pb-2 '>
       <form
         className='flex flex-col font-quicksand'
         onSubmit={handleSubmit(onSubmit)}
+        ref={formRef}
       >
         {errors.title?.type === 'required' && (
           <span className='text-red-500 font-semibold flex max-w-fit'>
@@ -71,8 +75,7 @@ const Form = ({
           defaultValue={description}
           onKeyDown={e => {
             if (e.key === 'Enter' && e.shiftKey === false) {
-              handleSubmit(onSubmit())
-              e.preventDefault()
+              triggerSubmit()
             }
             //dynamic fieldsize:
             e.target.style.height = 'inherit'
@@ -88,20 +91,16 @@ const Form = ({
                 icon='fa-calendar'
               />
 
-              <p className=' flex ml-1'>
-                {!value
-                  ? 'No Date'
-                  : isSameYear(new Date(), value)
-                  ? format(value, 'dd.MMM')
-                  : format(value, 'dd.MM.yy')}
-              </p>
+              <p className=' flex ml-1'>{formatFormDate(date)}</p>
             </button>
           </div>
 
           <button
             className={`flex ml-3 ${flagged ? 'text-red-600' : ''} `}
             type='button'
-            onClick={changeFlagged}
+            onClick={() => {
+              onSubmit({ flagged: !flagged })
+            }}
           >
             <FontAwesomeIcon icon='fa-flag' />
           </button>
@@ -120,8 +119,7 @@ const Form = ({
                 onChange={date => {
                   onChange(date)
                   handleBtnClicked()
-                  setValue(date)
-                  handleSubmit(onSubmit({ date: formatISO(date) }))
+                  handleSubmit(onSubmit({ date: date }))
                 }}
               />
             )}
@@ -134,5 +132,3 @@ const Form = ({
 }
 
 export default Form
-
-/* dispatch({type: ACTIONS.ADD_TASK, payload: { data }}) */

@@ -1,5 +1,5 @@
 import React, { useContext, useReducer, useState, useEffect } from 'react'
-import { getInitialValue, ACTIONS, reducer } from './index'
+import { getInitialValue, ACTIONS, reducer } from '../utils/index'
 
 const SectionContext = React.createContext()
 

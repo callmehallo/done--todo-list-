@@ -1,33 +1,12 @@
 import React from 'react'
-import {
-  AppBar,
-  Section,
-  useSections,
-  SectionNameModal,
-  useModal,
-  ACTIONS,
-} from './components/index'
+import { AppBar, Section, useSections } from './components/index'
 
 const App = () => {
-  const { sections, dispatch } = useSections()
-  const [modalHidden, handleModal] = useModal()
-
-  const addSection = formData => {
-    const { section } = formData
-    const capitalSection = section.charAt(0).toUpperCase() + section.slice(1)
-    dispatch({
-      type: ACTIONS.ADD_SECTION,
-      payload: { section: capitalSection },
-    })
-    handleModal()
-  }
+  const { sections } = useSections()
 
   return (
     <div className='App'>
-      {!modalHidden && (
-        <SectionNameModal handleModal={handleModal} onSubmit={addSection} />
-      )}
-      <AppBar handleModal={handleModal} />
+      <AppBar />
 
       {sections.map(items => (
         <Section items={items} key={items.key} />

@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useRef, useState } from 'react'
 
-const DropdownIcon = ({ children, icon, className, size }) => {
+const Dropdown = ({ children, icon, className, size }) => {
   const [clicked, setClicked] = useState(false)
   const handleClick = () => {
     setClicked(clicked => !clicked)
@@ -14,9 +14,6 @@ const DropdownIcon = ({ children, icon, className, size }) => {
       handleClick()
     }
   }
-
-  /* const childrenArray = React.Children.toArray(children)
-  const lastElement = childrenArray.length - 1 */
 
   useEffect(() => {
     if (clicked) {
@@ -31,18 +28,17 @@ const DropdownIcon = ({ children, icon, className, size }) => {
     <div ref={node} onClick={handleClick}>
       <FontAwesomeIcon className={className} icon={icon} size={size} />
 
-      {clicked && children}
+      {clicked && (
+        <div
+          className={`flex flex-col  animate-scale-in-tr mt-1 border-collapse m1 rounded-md bg-cusGrey  z-20 absolute right-0   font-quicksand text-2xl p-1 ${
+            icon === 'fa-bars' ? 'top-20' : ''
+          } `}
+        >
+          {children}
+        </div>
+      )}
     </div>
   )
-
-  /* <div ref={node} onClick={handleClick}>
-      {icon ? (
-        <FontAwesomeIcon className={className} icon={icon} />
-      ) : (
-        childrenArray[0]
-      )}
-      {clicked && childrenArray[lastElement]}
-    </div> */
 }
 
-export default DropdownIcon
+export default Dropdown

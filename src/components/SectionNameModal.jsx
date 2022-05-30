@@ -2,7 +2,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { FontAwesomeIcon } from './index'
 
-const AddSectionModal = ({ onSubmit, handleModal }) => {
+const SectionNameModal = ({ onSubmit, handleModal }) => {
   const {
     register,
     handleSubmit,
@@ -54,4 +54,4 @@ const AddSectionModal = ({ onSubmit, handleModal }) => {
   )
 }
 
-export default AddSectionModal
+export default SectionNameModal
