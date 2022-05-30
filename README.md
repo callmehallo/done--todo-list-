@@ -47,7 +47,7 @@
 - how following hooks work: state, effect, reducer, context, ref, custom hooks
 - how to implent stateful forms and connect them with proper logic 
 - how to implement controlled forms
-- how state is passed between components and that changing state in the parent component will trigger render in all its children.. I have to rework my sectionContext :(
+- how state is passed between components 
   
 
 ## *The web app looks best on mobile view*
