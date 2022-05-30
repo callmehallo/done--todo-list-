@@ -4,7 +4,7 @@
 ## [Github Pages](https://callmehallo.github.io/done--todo-list-/)
 
 
-### Instructions to fill app with predefined tasks:
+### Instructions to fill app with predefined tasks (recommended):
 
 
    1. **Inspect done web app and open console**
@@ -18,12 +18,6 @@
     //reload site
   ```
   
-
-#
-
-
-
-
 
 
 ### **Features:**
@@ -56,5 +50,5 @@
 - how state is passed between components and that changing state in the parent component will trigger render in all its children.. I have to rework my sectionContext :(
   
 
-## *the web app looks best on mobile view*
-  
+## *The web app looks best on mobile view*
+### My approach to design mostly came  from the *Todoist* mobile iOS app
